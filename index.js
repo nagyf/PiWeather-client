@@ -12,6 +12,8 @@ const hw = require('./src/hw');
  */
 function readDataAndSend() {
     hw.readHumidityAndPressure().then(res => {
+        winston.info(res);
+
         humidity.create(res.humidity).then(() => {
             winston.info('Humidity data saved');
         });
@@ -22,6 +24,7 @@ function readDataAndSend() {
     });
 
     hw.readTemperatureAndHumidity().then(res => {
+        winston.info(res);
         temperature.create(res.temperature).then(() => {
             winston.info('Temperature data saved');
         });

@@ -1,26 +1,6 @@
 const winston = require('winston');
-const dht22lib = require('node-dht-sensor');
+const dht22 = require('node-dht-sensor');
 const bmp085lib = require('bmp085');
-
-const dht22 = {
-    initialize: () => {
-        return dht22lib.initialize(22, 22);
-    },
-    read: () => {
-        const readout = dht22lib.read();
-        const values = {
-            temperature: readout.temperature.toFixed(2),
-            humidity: readout.humidity.toFixed(2)
-        };
-        winston.info(`DHT22 temperature: ${values.temperature} °C; DHT22 humidity: ${values.humidity} %`);
-        return values;
-    }
-};
-
-if (!dht22.initialize()) {
-    winston.error('Unable to initialize DHT22');
-    throw new Error('Unable to initialize DHT22');
-}
 
 const bmp085 = new bmp085lib({
     'mode': 1,
@@ -58,17 +38,31 @@ function readHumidityAndPressure() {
  * Reads the current temperature from the hardware and return a promise
  */
 function readTemperatureAndHumidity() {
-    const result = dht22.read();
-    return Promise.resolve({
-        humidity: {
-            value: result.humidity,
-            unit: "%"
-        },
-        temperature: {
-            value: result.temperature,
-            unit: "°C"
-        }
+    const promise = new Promise((resolve, reject) => {
+        dht22.read(22, 4, (err, temperature, humidity) => {
+            if(err) {
+                winston.error('Error while reading data from the DHT22 sensor', err);
+                reject(err);
+            } else {
+                resolve({
+                    humidity: {
+                        value: humidity,
+                        unit: "%"
+                    },
+                    temperature: {
+                        value: temperature,
+                        unit: "°C"
+                    }
+                });
+            }
+        });
     });
+
+    promise.catch(ex => {
+        winston.error('Error while reading data from the DHT22 sensor', ex);
+    });
+
+    return promise;
 }
 
 module.exports = {
