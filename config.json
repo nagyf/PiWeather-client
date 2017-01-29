@@ -11,5 +11,10 @@
   },
   "app": {
     "interval": 2000
+  },
+  "sensor": {
+    "dht22": {
+      "pin": 4
+    }
   }
 }

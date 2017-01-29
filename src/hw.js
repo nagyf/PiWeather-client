@@ -1,6 +1,7 @@
 const winston = require('winston');
 const dht22 = require('node-dht-sensor');
 const bmp085lib = require('bmp085');
+const config = require('../config.json');
 
 const bmp085 = new bmp085lib({
     'mode': 1,
@@ -16,11 +17,11 @@ function readHumidityAndPressure() {
         bmp085.read(data => {
             resolve({
                 humidity: {
-                    value: 44,
+                    value: data.humidity,
                     unit: "%"
                 },
                 pressure: {
-                    value: 25,
+                    value: data.pressure,
                     unit: "Psi"
                 }
             });
@@ -39,7 +40,7 @@ function readHumidityAndPressure() {
  */
 function readTemperatureAndHumidity() {
     const promise = new Promise((resolve, reject) => {
-        dht22.read(22, 4, (err, temperature, humidity) => {
+        dht22.read(22, config.sensor.dht22.pin, (err, temperature, humidity) => {
             if(err) {
                 winston.error('Error while reading data from the DHT22 sensor', err);
                 reject(err);
