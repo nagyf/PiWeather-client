@@ -11,12 +11,8 @@ const hw = require('./src/hw');
  * Reads the data from the hardware and sends it to the API
  */
 function readDataAndSend() {
-    hw.readHumidityAndPressure().then(res => {
+    hw.readTemperatureAndPressure().then(res => {
         winston.info(res);
-
-        humidity.create(res.humidity).then(() => {
-            winston.info('Humidity data saved');
-        });
 
         pressure.create(res.pressure).then(() => {
             winston.info('Pressure data saved');
@@ -27,6 +23,9 @@ function readDataAndSend() {
         winston.info(res);
         temperature.create(res.temperature).then(() => {
             winston.info('Temperature data saved');
+        });
+        humidity.create(res.humidity).then(() => {
+            winston.info('Humidity data saved');
         });
     });
 }

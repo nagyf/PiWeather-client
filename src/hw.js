@@ -12,12 +12,12 @@ const bmp085 = new bmp085lib({
 /**
  * Reads the current humidity and pressure from the hardware and return a promise
  */
-function readHumidityAndPressure() {
+function readTemperatureAndPressure() {
     const promise = new Promise((resolve, reject) => {
         bmp085.read(data => {
             resolve({
-                humidity: {
-                    value: data.humidity,
+                temperature: {
+                    value: data.temperature,
                     unit: "%"
                 },
                 pressure: {
@@ -67,6 +67,6 @@ function readTemperatureAndHumidity() {
 }
 
 module.exports = {
-    readHumidityAndPressure: readHumidityAndPressure,
+    readTemperatureAndPressure: readTemperatureAndPressure,
     readTemperatureAndHumidity: readTemperatureAndHumidity
 };
