@@ -11,14 +11,7 @@ function authenticate() {
                     password: config.server.auth.password
                 }
             },
-            function (err, res, body) {
-                if (err) {
-                    winston.error(err);
-                    reject(err);
-                } else {
-                    resolve(body);
-                }
-            }
+            api.handleApiResponse.bind(null, resolve, reject)
         );
     });
 }

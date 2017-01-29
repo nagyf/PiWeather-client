@@ -1,3 +1,5 @@
+const winston = require('winston');
+const request = require('request');
 const config = require('../config.json');
 
 let token = null;
@@ -27,8 +29,51 @@ function getToken() {
     return token;
 }
 
+function handleApiResponse(resolve, reject, err, res, body) {
+    if(err || res.statusCode === 401) {
+        winston.error(err, body);
+        reject(err);
+    } else {
+        winston.debug(res);
+        resolve(body);
+    }
+}
+
+function createAuthHeaders() {
+    return {
+        'Authorization': 'JWT ' + token
+    };
+}
+
+function list(endpoint) {
+    return new Promise(function (resolve, reject) {
+        request.get({
+                url: getApiUrl(endpoint),
+                headers: createAuthHeaders()
+            },
+            handleApiResponse.bind(null, resolve, reject)
+        );
+    });
+}
+
+function create(endpoint, data) {
+    return new Promise(function (resolve, reject) {
+        request.post({
+                url: getApiUrl(endpoint),
+                headers: createAuthHeaders()
+            }, {
+                json: data
+            },
+            handleApiResponse.bind(null, resolve, reject)
+        );
+    });
+}
+
 module.exports = {
     setToken: setToken,
     getToken: getToken,
-    getApiUrl: getApiUrl
+    getApiUrl: getApiUrl,
+    handleApiResponse: handleApiResponse,
+    create: create,
+    list: list
 };
