@@ -29,6 +29,14 @@ function getToken() {
     return token;
 }
 
+/**
+ * Generic HTTP response handler
+ * @param resolve the promise resolve function
+ * @param reject the promise reject function
+ * @param err the error object
+ * @param res the response object
+ * @param body the body of the response
+ */
 function handleApiResponse(resolve, reject, err, res, body) {
     if(err || res.statusCode === 401) {
         winston.error(err, body);
@@ -39,12 +47,21 @@ function handleApiResponse(resolve, reject, err, res, body) {
     }
 }
 
+/**
+ * Creates an object that contains the HTTP Authorization headers with the JWT token in it
+ * @returns {{Authorization: string}}
+ */
 function createAuthHeaders() {
     return {
         'Authorization': 'JWT ' + token
     };
 }
 
+/**
+ * Generic function that can call any endpoint with a simple GET request.
+ * @param endpoint the endpoint name
+ * @returns {Promise} a promise object
+ */
 function list(endpoint) {
     return new Promise(function (resolve, reject) {
         request.get({
@@ -56,6 +73,11 @@ function list(endpoint) {
     });
 }
 
+/**
+ * Generic function that can call any endpoint with a simple POST request.
+ * @param endpoint the endpoint name
+ * @returns {Promise} a promise object
+ */
 function create(endpoint, data) {
     return new Promise(function (resolve, reject) {
         request.post({

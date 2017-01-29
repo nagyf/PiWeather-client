@@ -3,6 +3,10 @@ const winston = require('winston');
 const config = require('../config.json');
 const api = require('./api');
 
+/**
+ * Authenticates with the API
+ * @returns {Promise} a promise object
+ */
 function authenticate() {
     return new Promise(function (resolve, reject) {
         request.post(api.getApiUrl('auth/login'), {
