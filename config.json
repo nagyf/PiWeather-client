@@ -1,0 +1,12 @@
+{
+  "server": {
+    "protocol": "http",
+    "ip": "localhost",
+    "port": "3000",
+    "apiUrl": "/api",
+    "auth": {
+      "email": "nagyf@nagyf.hu",
+      "password": "a"
+    }
+  }
+}
