@@ -7,7 +7,7 @@ function list() {
 }
 
 function create(pressure) {
-    return api.create(endpointName, pressure)
+    return api.create(endpointName, pressure);
 }
 
 module.exports = {

@@ -8,5 +8,8 @@
       "email": "nagyf@nagyf.hu",
       "password": "a"
     }
+  },
+  "app": {
+    "interval": 2000
   }
 }

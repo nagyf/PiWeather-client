@@ -7,7 +7,7 @@ function list() {
 }
 
 function create(temperature) {
-    return api.create(endpointName, temperature)
+    return api.create(endpointName, temperature);
 }
 
 module.exports = {

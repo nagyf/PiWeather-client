@@ -7,7 +7,7 @@ function list() {
 }
 
 function create(humidity) {
-    return api.create(endpointName, humidity)
+    return api.create(endpointName, humidity);
 }
 
 module.exports = {

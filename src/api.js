@@ -38,13 +38,17 @@ function getToken() {
  * @param body the body of the response
  */
 function handleApiResponse(resolve, reject, err, res, body) {
-    if(err || res.statusCode === 401) {
+    if (err || res.statusCode !== 200) {
         winston.error(err, body);
         reject(err);
     } else {
         winston.debug(res);
         resolve(body);
     }
+}
+
+function handleException(ex) {
+    winston.error(ex);
 }
 
 /**
@@ -63,32 +67,43 @@ function createAuthHeaders() {
  * @returns {Promise} a promise object
  */
 function list(endpoint) {
-    return new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
         request.get({
                 url: getApiUrl(endpoint),
                 headers: createAuthHeaders()
             },
-            handleApiResponse.bind(null, resolve, reject)
+            function (err, res, body) {
+                handleApiResponse(resolve, reject, err, res, body);
+            }
         );
     });
+
+    promise.catch(handleException);
+
+    return promise;
 }
 
 /**
  * Generic function that can call any endpoint with a simple POST request.
  * @param endpoint the endpoint name
+ * @param data the object to send as POST data
  * @returns {Promise} a promise object
  */
 function create(endpoint, data) {
-    return new Promise(function (resolve, reject) {
-        request.post({
-                url: getApiUrl(endpoint),
-                headers: createAuthHeaders()
-            }, {
+    const promise = new Promise(function (resolve, reject) {
+        request.post(getApiUrl(endpoint), {
+                headers: createAuthHeaders(),
                 json: data
             },
-            handleApiResponse.bind(null, resolve, reject)
+            function (err, res, body) {
+                handleApiResponse(resolve, reject, err, res, body);
+            }
         );
     });
+
+    promise.catch(handleException);
+
+    return promise;
 }
 
 module.exports = {
