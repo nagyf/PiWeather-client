@@ -1,4 +1,5 @@
 const winston = require('winston');
+const moment = require('moment');
 const config = require('./config.json');
 const auth = require('./src/auth');
 const api = require('./src/api');
@@ -30,10 +31,24 @@ function readDataAndSend() {
     });
 }
 
+function setupRenewal(expiration) {
+    const exp = moment.unix(expiration);
+    const renewalTime = exp.subtract(10, 'minutes');
+    const ms = renewalTime.valueOf() - moment().valueOf();
+
+    setTimeout(function () {
+        auth.renew().then(function (res) {
+            api.setToken(res.token);
+            setupRenewal(res.expiration);
+        });
+    }, ms);
+}
+
 auth.authenticate().then(
     function (res) {
         // Set the api token
         api.setToken(res.token);
+        setupRenewal(res.expiration);
 
         // Start the app
         setInterval(readDataAndSend, config.app.interval);

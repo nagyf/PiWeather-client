@@ -20,6 +20,15 @@ function authenticate() {
     });
 }
 
+function renew() {
+    return new Promise(function (resolve, reject) {
+        request.post(api.getApiUrl('token/renew'), {},
+            api.handleApiResponse.bind(null, resolve, reject)
+        );
+    });
+}
+
 module.exports = {
-    authenticate: authenticate
+    authenticate: authenticate,
+    renew: renew
 };
