@@ -22,7 +22,10 @@ function authenticate() {
 
 function renew() {
     return new Promise(function (resolve, reject) {
-        request.post(api.getApiUrl('token/renew'), {},
+        request.post(api.getApiUrl('token/renew'), {
+                headers: api.createAuthHeaders(),
+                json: {}
+            },
             api.handleApiResponse.bind(null, resolve, reject)
         );
     });

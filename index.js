@@ -38,6 +38,7 @@ function setupRenewal(expiration) {
 
     setTimeout(function () {
         auth.renew().then(function (res) {
+            console.log(res);
             api.setToken(res.token);
             setupRenewal(res.expiration);
         });

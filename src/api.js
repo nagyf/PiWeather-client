@@ -111,6 +111,7 @@ module.exports = {
     getToken: getToken,
     getApiUrl: getApiUrl,
     handleApiResponse: handleApiResponse,
+    createAuthHeaders: createAuthHeaders,
     create: create,
     list: list
 };
